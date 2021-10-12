@@ -22,7 +22,7 @@ type stack struct {
 var s *stack
 var stackOperations, stackDepth, maxStackDepth int
 
-const puzzleNumber = 6 // Which of the preset puzzles will we do?
+const puzzleNumber = 5 // Which of the preset puzzles will we do?
 
 func NewStack() *stack {
 	stackOperations = 0
@@ -144,118 +144,107 @@ func calculateWhichCellsToCheck() {
 }
 
 func populateInitialGrid(gridNum int) {
-
-	var gridline [10]string
-
-	switch gridNum {
-	case 1:
+	exampleGrids := [][]string{
 		{
-			gridline[1] = "068309070"
-			gridline[2] = "042000001"
-			gridline[3] = "107050600"
-			gridline[4] = "005070120"
-			gridline[5] = "700001580"
-			gridline[6] = "000030740"
-			gridline[7] = "000190205"
-			gridline[8] = "801620390"
-			gridline[9] = "900543010"
-
-		}
-	case 2:
+			"068309070",
+			"042000001",
+			"107050600",
+			"005070120",
+			"700001580",
+			"000030740",
+			"000190205",
+			"801620390",
+			"900543010",
+		},
 		{
-			gridline[1] = "063500000"
-			gridline[2] = "027000094"
-			gridline[3] = "094000510"
-			gridline[4] = "000000000"
-			gridline[5] = "000009080"
-			gridline[6] = "000048730"
-			gridline[7] = "000450020"
-			gridline[8] = "200036108"
-			gridline[9] = "051002307"
-		}
-	case 3:
+			"063500000",
+			"027000094",
+			"094000510",
+			"000000000",
+			"000009080",
+			"000048730",
+			"000450020",
+			"200036108",
+			"051002307",
+		},
 		{
-			gridline[1] = "080400002"
-			gridline[2] = "009000004"
-			gridline[3] = "730000008"
-			gridline[4] = "000913000"
-			gridline[5] = "042600000"
-			gridline[6] = "007050600"
-			gridline[7] = "050006309"
-			gridline[8] = "020300000"
-			gridline[9] = "400001000"
-		}
-	case 4:
+			"080400002",
+			"009000004",
+			"730000008",
+			"000913000",
+			"042600000",
+			"007050600",
+			"050006309",
+			"020300000",
+			"400001000",
+		},
 		{
-			gridline[1] = "105900760"
-			gridline[2] = "020003000"
-			gridline[3] = "006000080"
-			gridline[4] = "004000510"
-			gridline[5] = "800040000"
-			gridline[6] = "050000800"
-			gridline[7] = "009000100"
-			gridline[8] = "000560090"
-			gridline[9] = "000020003"
-		}
-	case 5:
+			"105900760",
+			"020003000",
+			"006000080",
+			"004000510",
+			"800040000",
+			"050000800",
+			"009000100",
+			"000560090",
+			"000020003",
+		},
 		{
-			gridline[1] = "090040030"
-			gridline[2] = "600750009"
-			gridline[3] = "007000600"
-			gridline[4] = "000000010"
-			gridline[5] = "230090057"
-			gridline[6] = "050000000"
-			gridline[7] = "005000800"
-			gridline[8] = "300021006"
-			gridline[9] = "070030090"
-		}
-	case 6:
+			"090040030",
+			"600750009",
+			"007000600",
+			"000000010",
+			"230090057",
+			"050000000",
+			"005000800",
+			"300021006",
+			"070030090",
+		},
 		{
-			gridline[1] = "800000000"
-			gridline[2] = "003600000"
-			gridline[3] = "070090200"
-			gridline[4] = "050007000"
-			gridline[5] = "000045700"
-			gridline[6] = "000100030"
-			gridline[7] = "001000068"
-			gridline[8] = "008500010"
-			gridline[9] = "090000400"
-		}
-	case 7:
+			"800000000",
+			"003600000",
+			"070090200",
+			"050007000",
+			"000045700",
+			"000100030",
+			"001000068",
+			"008500010",
+			"090000400",
+		},
 		{
-			gridline[1] = "001000000"
-			gridline[2] = "800000020"
-			gridline[3] = "070010500"
-			gridline[4] = "400005300"
-			gridline[5] = "010070006"
-			gridline[6] = "003200080"
-			gridline[7] = "060500009"
-			gridline[8] = "004000030"
-			gridline[9] = "000009700"
-		}
-	case 8:
+			"001000000",
+			"800000020",
+			"070010500",
+			"400005300",
+			"010070006",
+			"003200080",
+			"060500009",
+			"004000030",
+			"000009700",
+		},
 		{
-			gridline[1] = "005300000"
-			gridline[2] = "800000020"
-			gridline[3] = "070010500"
-			gridline[4] = "400005300"
-			gridline[5] = "010070006"
-			gridline[6] = "003200080"
-			gridline[7] = "060500009"
-			gridline[8] = "004000030"
-			gridline[9] = "000009700"
-		}
+			"005300000",
+			"800000020",
+			"070010500",
+			"400005300",
+			"010070006",
+			"003200080",
+			"060500009",
+			"004000030",
+			"000009700",
+		},
 	}
+
+	gridline := exampleGrids[gridNum]
 
 	for i := 1; i < 10; i++ {
 		for j := 1; j < 10; j++ {
-			if digit, err := strconv.Atoi(gridline[i][j-1 : j]); err == nil {
+			if digit, err := strconv.Atoi(gridline[i-1][j-1 : j]); err == nil {
 				grid[i][j] = digit
 			} else {
 				fmt.Printf("Error: %s fromn string %s\n", err, gridline[i][j-1:j])
 			}
 		}
-
 	}
 
 }
