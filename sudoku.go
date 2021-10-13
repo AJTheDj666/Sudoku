@@ -1,11 +1,9 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 )
 
@@ -14,45 +12,12 @@ var cellsToCheck [10][10][25][2]int // For each cell, gives (x,y) co-ordnates fo
 
 var grid [10][10]int // This is the working grid
 
-type stack struct {
-	lock sync.Mutex // you don't have to do this if you don't want thread safety
-	s    []int
-}
-
 var s *stack
 var stackOperations, stackDepth, maxStackDepth int
 
 const puzzleNumber = 5 // Which of the preset puzzles will we do?
 
-func NewStack() *stack {
-	stackOperations = 0
-	stackDepth = 0
-	return &stack{sync.Mutex{}, make([]int, 0)}
-}
-
-func (s *stack) Push(v int) {
-	s.lock.Lock()
-	defer s.lock.Unlock()
-
-	s.s = append(s.s, v)
-}
-
-func (s *stack) Pop() (int, error) {
-	s.lock.Lock()
-	defer s.lock.Unlock()
-
-	l := len(s.s)
-	if l == 0 {
-		return 0, errors.New("emptystack")
-	}
-
-	res := s.s[l-1]
-	s.s = s.s[:l-1]
-	return res, nil
-}
-
 func pushGrid() {
-
 	for row := 1; row < 10; row++ {
 		for col := 1; col < 10; col++ {
 			s.Push(grid[row][col])
